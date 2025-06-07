@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NAS100 Position Size Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg-light: #f7f9fc;
+      --bg-dark: #121212;
+      --text-light: #1a1a1a;
+      --text-dark: #f0f0f0;
+      --card-bg-light: rgba(255, 255, 255, 0.85);
+      --card-bg-dark: rgba(30, 30, 30, 0.85);
+      --button-blue: #007bff;
+      --button-hover: #0056b3;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .container {
+      background: var(--card-bg-light);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background: var(--button-blue);
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: var(--button-hover);
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .dark-mode .container {
+      background: var(--card-bg-dark);
+    }
+
+    .dark-mode input {
+      background: #2a2a2a;
+      color: white;
+      border: 1px solid #555;
+    }
+
+    .dark-mode button {
+      background: #3399ff;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle" onclick="toggleDarkMode()">🌙</button>
+
+  <div class="container">
+    <h1>NAS100 Position Size Calculator</h1>
+    <p>Enter your values below:</p>
+    <input type="number" id="balance" placeholder="Account Balance (e.g. 10000)" />
+    <input type="number" id="risk" placeholder="Risk % (e.g. 1)" step="0.01" />
+    <input type="number" id="stopLoss" placeholder="Stop Loss (points, e.g. 50.82)" step="0.01" />
+    <button onclick="calculate()">Calculate</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <audio id="ping" src="https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.wav" preload="auto"></audio>
+
+  <script>
+    const resultBox = document.getElementById('result');
+    const ping = document.getElementById('ping');
+
+    function calculate() {
+      const balance = parseFloat(document.getElementById('balance').value);
+      const riskPercent = parseFloat(document.getElementById('risk').value);
+      const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+
+      if (isNaN(balance) || isNaN(riskPercent) || isNaN(stopLoss) || stopLoss === 0) {
+        resultBox.innerText = 'Please enter valid numbers.';
+        return;
+      }
+
+      const riskAmount = balance * (riskPercent / 100);
+      const positionSize = riskAmount / stopLoss;
+
+      resultBox.innerText = `Trade ${positionSize.toFixed(2)} lots`;
+      ping.play();
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script>
+</body>
+</html>
+
+
